@@ -4,44 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jogo da Memória - Springfield</title>
+
   <style>
     * {
       box-sizing: border-box;
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-image: url('URL_DA_IMAGEM_DE_SPRINGFIELD');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    min-height: 100vh;
-    color: #222;
-  }
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-image: url('https://placehold.co/1600x900?text=Springfield');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #222;
+    }
+
+    .overlay {
+      min-height: 100vh;
+      background: rgba(255, 255, 255, 0.35);
+      padding: 24px;
+    }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 24px;
     }
 
     .header {
-      background: rgba(255,255,255,0.94);
+      background: rgba(255, 255, 255, 0.94);
       border: 4px solid #ffd90f;
       border-radius: 24px;
       padding: 24px;
       margin-bottom: 24px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
     }
 
     .title {
       margin: 0 0 8px;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       font-weight: 900;
     }
 
     .subtitle {
-      margin: 0 0 16px;
+      margin: 0 0 18px;
       font-size: 1rem;
     }
 
@@ -53,18 +61,19 @@
     }
 
     .pill {
-      background: #fff;
+      background: #ffffff;
       border: 2px solid #7dd3fc;
       border-radius: 14px;
       padding: 10px 14px;
       font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .actions {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .primary {
@@ -75,22 +84,36 @@
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      transition: transform 0.15s ease;
     }
 
     .primary:hover {
       transform: translateY(-1px);
     }
 
+    .rules {
+      margin-top: 10px;
+      font-size: 14px;
+      background: #fff8cc;
+      border: 2px dashed #facc15;
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
     .message {
       margin-top: 16px;
       font-weight: bold;
       font-size: 1.1rem;
+      min-height: 24px;
     }
 
     .board {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 14px;
+      margin-bottom: 24px;
     }
 
     .card {
@@ -103,7 +126,8 @@
     }
 
     .card:disabled {
-      cursor: default;
+      cursor: not-allowed;
+      opacity: 0.95;
     }
 
     .card-inner {
@@ -160,20 +184,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #fff;
     }
 
     .footer-note {
       margin-top: 24px;
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.94);
       border: 3px solid #ffd90f;
       border-radius: 20px;
       padding: 16px;
       font-size: 0.95rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     }
 
     @media (max-width: 640px) {
       .title {
-        font-size: 1.7rem;
+        font-size: 1.8rem;
       }
 
       .card {
@@ -187,54 +213,60 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <section class="header">
-      <h1 class="title">Jogo da Memória - Springfield</h1>
-      <p class="subtitle">Tema visual inspirado no universo dos Simpsons.</p>
+  <div class="overlay">
+    <div class="container">
+      <section class="header">
+        <h1 class="title">Jogo da Memória - Springfield</h1>
+        <p class="subtitle">Tema visual inspirado no universo dos Simpsons.</p>
 
-      <div class="stats">
-        <div class="pill">Jogadas: <span id="moves">0</span></div>
-        <div class="pill">Pares: <span id="matches">0</span>/20</div>
-        <div class="pill">Tempo: <span id="time">00:00</span></div>
-        <div class="pill">Pontos: <span id="score">0</span></div>
-      </div>
+        <div class="stats">
+          <div class="pill">Jogadas: <span id="moves">0</span></div>
+          <div class="pill">Pares: <span id="matches">0</span>/20</div>
+          <div class="pill">Tempo: <span id="time">00:00</span></div>
+          <div class="pill">Pontos: <span id="score">0</span></div>
+        </div>
 
-      <div class="actions">
-        <button class="primary" id="restartBtn">Reiniciar jogo</button>
-      </div>
+        <div class="actions">
+          <button class="primary" id="restartBtn">Reiniciar jogo</button>
+        </div>
 
-      <div class="message" id="message"></div>
-    </section>
+        <div class="rules">
+          Regra: <strong>Acerto = +5 pontos</strong> | <strong>Erro = -1 ponto</strong>
+        </div>
 
-    <section class="board" id="board"></section>
+        <div class="message" id="message"></div>
+      </section>
 
-    <section class="footer-note">
-      Esta versão usa imagens temporárias. Depois você pode substituir pelos links das imagens que desejar utilizar.
-    </section>
+      <section class="board" id="board"></section>
+
+      <section class="footer-note">
+        Esta versão usa imagens temporárias. Depois você pode substituir os links das imagens dos personagens e a imagem de fundo de Springfield.
+      </section>
+    </div>
   </div>
 
   <script>
     const characters = [
-        { id: 1, name: "Homer", image: "URL_IMAGEM_HOMER" },
-        { id: 2, name: "Marge", image: "URL_IMAGEM_MARGE" },
-        { id: 3, name: "Bart", image: "URL_IMAGEM_BART" },
-        { id: 4, name: "Lisa", image: "URL_IMAGEM_LISA" },
-        { id: 5, name: "Maggie", image: "URL_IMAGEM_MAGGIE" },
-        { id: 6, name: "Ned Flanders", image: "URL_IMAGEM_NED" },
-        { id: 7, name: "Milhouse", image: "URL_IMAGEM_MILHOUSE" },
-        { id: 8, name: "Moe", image: "URL_IMAGEM_MOE" },
-        { id: 9, name: "Barney", image: "URL_IMAGEM_BARNEY" },
-        { id: 10, name: "Apu", image: "URL_IMAGEM_APU" },
-        { id: 11, name: "Krusty", image: "URL_IMAGEM_KRUSTY" },
-        { id: 12, name: "Mr. Burns", image: "URL_IMAGEM_BURNS" },
-        { id: 13, name: "Smithers", image: "URL_IMAGEM_SMITHERS" },
-        { id: 14, name: "Chief Wiggum", image: "URL_IMAGEM_WIGGUM" },
-        { id: 15, name: "Ralph", image: "URL_IMAGEM_RALPH" },
-        { id: 16, name: "Comic Book Guy", image: "URL_IMAGEM_COMIC_BOOK_GUY" },
-        { id: 17, name: "Skinner", image: "URL_IMAGEM_SKINNER" },
-        { id: 18, name: "Nelson", image: "URL_IMAGEM_NELSON" },
-        { id: 19, name: "Otto", image: "URL_IMAGEM_OTTO" },
-        { id: 20, name: "Willie", image: "URL_IMAGEM_WILLIE" }
+      { id: 1, name: "Homer", image: "https://placehold.co/300x300?text=Homer" },
+      { id: 2, name: "Marge", image: "https://placehold.co/300x300?text=Marge" },
+      { id: 3, name: "Bart", image: "https://placehold.co/300x300?text=Bart" },
+      { id: 4, name: "Lisa", image: "https://placehold.co/300x300?text=Lisa" },
+      { id: 5, name: "Maggie", image: "https://placehold.co/300x300?text=Maggie" },
+      { id: 6, name: "Ned Flanders", image: "https://placehold.co/300x300?text=Ned" },
+      { id: 7, name: "Milhouse", image: "https://placehold.co/300x300?text=Milhouse" },
+      { id: 8, name: "Moe", image: "https://placehold.co/300x300?text=Moe" },
+      { id: 9, name: "Barney", image: "https://placehold.co/300x300?text=Barney" },
+      { id: 10, name: "Apu", image: "https://placehold.co/300x300?text=Apu" },
+      { id: 11, name: "Krusty", image: "https://placehold.co/300x300?text=Krusty" },
+      { id: 12, name: "Mr.+Burns", image: "https://placehold.co/300x300?text=Burns" },
+      { id: 13, name: "Smithers", image: "https://placehold.co/300x300?text=Smithers" },
+      { id: 14, name: "Chief Wiggum", image: "https://placehold.co/300x300?text=Wiggum" },
+      { id: 15, name: "Ralph", image: "https://placehold.co/300x300?text=Ralph" },
+      { id: 16, name: "Comic Book Guy", image: "https://placehold.co/300x300?text=Comic+Book+Guy" },
+      { id: 17, name: "Skinner", image: "https://placehold.co/300x300?text=Skinner" },
+      { id: 18, name: "Nelson", image: "https://placehold.co/300x300?text=Nelson" },
+      { id: 19, name: "Otto", image: "https://placehold.co/300x300?text=Otto" },
+      { id: 20, name: "Willie", image: "https://placehold.co/300x300?text=Willie" }
     ];
 
     const board = document.getElementById("board");
@@ -335,15 +367,13 @@
             uid: `${character.id}-a`,
             pairId: character.id,
             name: character.name,
-            image: character.image,
-            matched: false
+            image: character.image
           },
           {
             uid: `${character.id}-b`,
             pairId: character.id,
             name: character.name,
-            image: character.image,
-            matched: false
+            image: character.image
           }
         ])
       );
@@ -390,33 +420,35 @@
       secondCard = { element: cardElement, data: cardData };
       lockBoard = true;
       moves++;
-      updateStats();
-
+      
       const isMatch = firstCard.data.pairId === secondCard.data.pairId;
 
-     if (isMatch) {
-      firstCard.element.classList.add("matched");
-      secondCard.element.classList.add("matched");
-      matches++;
-      score += 5;
-      updateStats();
-      soundMatch();
-      resetSelection();
-      checkWin();
-    } else {
-      score -= 1;
-      updateStats();
-      soundMismatch();
-      setTimeout(() => {
-        firstCard.element.classList.remove("flipped");
-        secondCard.element.classList.remove("flipped");
+      if (isMatch) {
+        firstCard.element.classList.add("matched");
+        secondCard.element.classList.add("matched");
+        matches++;
+        score += 5;
+        updateStats();
+        soundMatch();
         resetSelection();
-      }, 900);
+        checkWin();
+      } else {
+        score -= 1;
+        updateStats();
+        soundMismatch();
+        setTimeout(() => {
+          firstCard.element.classList.remove("flipped");
+          secondCard.element.classList.remove("flipped");
+          resetSelection();
+        }, 900);
+      }
     }
 
     function createCard(cardData) {
       const button = document.createElement("button");
       button.className = "card";
+      button.type = "button";
+
       button.innerHTML = `
         <div class="card-inner">
           <div class="card-face card-front">☁️</div>
@@ -427,7 +459,10 @@
         </div>
       `;
 
-      button.addEventListener("click", () => handleCardClick(button, cardData));
+      button.addEventListener("click", function () {
+        handleCardClick(button, cardData);
+      });
+
       return button;
     }
 
@@ -439,20 +474,20 @@
     }
 
     function restartGame() {
-        stopTimer();
-        deck = createDeck();
-        firstCard = null;
-        secondCard = null;
-        lockBoard = false;
-        moves = 0;
-        matches = 0;
-        score = 0;
-        seconds = 0;
-        started = false;
-        timeEl.textContent = "00:00";
-        messageEl.textContent = "";
-        updateStats();
-        renderBoard();
+      stopTimer();
+      deck = createDeck();
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+      moves = 0;
+      matches = 0;
+      score = 0;
+      seconds = 0;
+      started = false;
+      timeEl.textContent = "00:00";
+      messageEl.textContent = "";
+      updateStats();
+      renderBoard();
     }
 
     restartBtn.addEventListener("click", restartGame);
