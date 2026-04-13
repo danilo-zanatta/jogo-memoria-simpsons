@@ -7,14 +7,17 @@
   <style>
     * {
       box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #87ceeb 0%, #bde9ff 50%, #ffe08a 100%);
-      min-height: 100vh;
-      color: #222;
-    }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url('URL_DA_IMAGEM_DE_SPRINGFIELD');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #222;
+  }
 
     .container {
       max-width: 1400px;
@@ -193,6 +196,7 @@
         <div class="pill">Jogadas: <span id="moves">0</span></div>
         <div class="pill">Pares: <span id="matches">0</span>/20</div>
         <div class="pill">Tempo: <span id="time">00:00</span></div>
+        <div class="pill">Pontos: <span id="score">0</span></div>
       </div>
 
       <div class="actions">
@@ -211,32 +215,33 @@
 
   <script>
     const characters = [
-      { id: 1, name: "Homer", image: "https://placehold.co/300x300?text=Homer" },
-      { id: 2, name: "Marge", image: "https://placehold.co/300x300?text=Marge" },
-      { id: 3, name: "Bart", image: "https://placehold.co/300x300?text=Bart" },
-      { id: 4, name: "Lisa", image: "https://placehold.co/300x300?text=Lisa" },
-      { id: 5, name: "Maggie", image: "https://placehold.co/300x300?text=Maggie" },
-      { id: 6, name: "Ned Flanders", image: "https://placehold.co/300x300?text=Ned" },
-      { id: 7, name: "Milhouse", image: "https://placehold.co/300x300?text=Milhouse" },
-      { id: 8, name: "Moe", image: "https://placehold.co/300x300?text=Moe" },
-      { id: 9, name: "Barney", image: "https://placehold.co/300x300?text=Barney" },
-      { id: 10, name: "Apu", image: "https://placehold.co/300x300?text=Apu" },
-      { id: 11, name: "Krusty", image: "https://placehold.co/300x300?text=Krusty" },
-      { id: 12, name: "Mr. Burns", image: "https://placehold.co/300x300?text=Burns" },
-      { id: 13, name: "Smithers", image: "https://placehold.co/300x300?text=Smithers" },
-      { id: 14, name: "Chief Wiggum", image: "https://placehold.co/300x300?text=Wiggum" },
-      { id: 15, name: "Ralph", image: "https://placehold.co/300x300?text=Ralph" },
-      { id: 16, name: "Comic Book Guy", image: "https://placehold.co/300x300?text=Comic+Book+Guy" },
-      { id: 17, name: "Skinner", image: "https://placehold.co/300x300?text=Skinner" },
-      { id: 18, name: "Nelson", image: "https://placehold.co/300x300?text=Nelson" },
-      { id: 19, name: "Otto", image: "https://placehold.co/300x300?text=Otto" },
-      { id: 20, name: "Willie", image: "https://placehold.co/300x300?text=Willie" }
+        { id: 1, name: "Homer", image: "URL_IMAGEM_HOMER" },
+        { id: 2, name: "Marge", image: "URL_IMAGEM_MARGE" },
+        { id: 3, name: "Bart", image: "URL_IMAGEM_BART" },
+        { id: 4, name: "Lisa", image: "URL_IMAGEM_LISA" },
+        { id: 5, name: "Maggie", image: "URL_IMAGEM_MAGGIE" },
+        { id: 6, name: "Ned Flanders", image: "URL_IMAGEM_NED" },
+        { id: 7, name: "Milhouse", image: "URL_IMAGEM_MILHOUSE" },
+        { id: 8, name: "Moe", image: "URL_IMAGEM_MOE" },
+        { id: 9, name: "Barney", image: "URL_IMAGEM_BARNEY" },
+        { id: 10, name: "Apu", image: "URL_IMAGEM_APU" },
+        { id: 11, name: "Krusty", image: "URL_IMAGEM_KRUSTY" },
+        { id: 12, name: "Mr. Burns", image: "URL_IMAGEM_BURNS" },
+        { id: 13, name: "Smithers", image: "URL_IMAGEM_SMITHERS" },
+        { id: 14, name: "Chief Wiggum", image: "URL_IMAGEM_WIGGUM" },
+        { id: 15, name: "Ralph", image: "URL_IMAGEM_RALPH" },
+        { id: 16, name: "Comic Book Guy", image: "URL_IMAGEM_COMIC_BOOK_GUY" },
+        { id: 17, name: "Skinner", image: "URL_IMAGEM_SKINNER" },
+        { id: 18, name: "Nelson", image: "URL_IMAGEM_NELSON" },
+        { id: 19, name: "Otto", image: "URL_IMAGEM_OTTO" },
+        { id: 20, name: "Willie", image: "URL_IMAGEM_WILLIE" }
     ];
 
     const board = document.getElementById("board");
     const movesEl = document.getElementById("moves");
     const matchesEl = document.getElementById("matches");
     const timeEl = document.getElementById("time");
+    const scoreEl = document.getElementById("score");
     const messageEl = document.getElementById("message");
     const restartBtn = document.getElementById("restartBtn");
 
@@ -246,6 +251,7 @@
     let lockBoard = false;
     let moves = 0;
     let matches = 0;
+    let score = 0;
     let seconds = 0;
     let timer = null;
     let started = false;
@@ -346,6 +352,7 @@
     function updateStats() {
       movesEl.textContent = moves;
       matchesEl.textContent = matches;
+      scoreEl.textContent = score;
     }
 
     function resetSelection() {
@@ -357,7 +364,7 @@
     function checkWin() {
       if (matches === characters.length) {
         stopTimer();
-        messageEl.textContent = `Parabéns. Você concluiu em ${moves} jogadas e ${formatTime(seconds)}.`;
+        messageEl.textContent = `Parabéns. Você concluiu em ${moves} jogadas, ${formatTime(seconds)} e fez ${score} pontos.`;
         soundWin();
       }
     }
@@ -387,22 +394,24 @@
 
       const isMatch = firstCard.data.pairId === secondCard.data.pairId;
 
-      if (isMatch) {
-        firstCard.element.classList.add("matched");
-        secondCard.element.classList.add("matched");
-        matches++;
-        updateStats();
-        soundMatch();
+     if (isMatch) {
+      firstCard.element.classList.add("matched");
+      secondCard.element.classList.add("matched");
+      matches++;
+      score += 5;
+      updateStats();
+      soundMatch();
+      resetSelection();
+      checkWin();
+    } else {
+      score -= 1;
+      updateStats();
+      soundMismatch();
+      setTimeout(() => {
+        firstCard.element.classList.remove("flipped");
+        secondCard.element.classList.remove("flipped");
         resetSelection();
-        checkWin();
-      } else {
-        soundMismatch();
-        setTimeout(() => {
-          firstCard.element.classList.remove("flipped");
-          secondCard.element.classList.remove("flipped");
-          resetSelection();
-        }, 900);
-      }
+      }, 900);
     }
 
     function createCard(cardData) {
@@ -430,19 +439,20 @@
     }
 
     function restartGame() {
-      stopTimer();
-      deck = createDeck();
-      firstCard = null;
-      secondCard = null;
-      lockBoard = false;
-      moves = 0;
-      matches = 0;
-      seconds = 0;
-      started = false;
-      timeEl.textContent = "00:00";
-      messageEl.textContent = "";
-      updateStats();
-      renderBoard();
+        stopTimer();
+        deck = createDeck();
+        firstCard = null;
+        secondCard = null;
+        lockBoard = false;
+        moves = 0;
+        matches = 0;
+        score = 0;
+        seconds = 0;
+        started = false;
+        timeEl.textContent = "00:00";
+        messageEl.textContent = "";
+        updateStats();
+        renderBoard();
     }
 
     restartBtn.addEventListener("click", restartGame);
