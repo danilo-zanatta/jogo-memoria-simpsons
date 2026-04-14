@@ -1,9 +1,9 @@
-# 🧠 Brain Match Game
+# 🧠 Match Arena
 
 Jogo da memória moderno com sistema de pontuação, combo, ranking local e modo contra o tempo.
 
 🔗 **Jogar agora:**  
-https://danilo-zanatta.github.io/brain-match-game/
+https://danilo-zanatta.github.io/match-arena/
 
 ---
 
