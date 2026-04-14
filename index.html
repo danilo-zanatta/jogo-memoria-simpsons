@@ -647,7 +647,14 @@
       }
 
       .card {
-        height: 152px;
+          height: 182px;
+          border: none;
+          padding: 0;
+          background: transparent;
+          cursor: pointer;
+          perspective: 1000px;
+          position: relative;
+          width: 100%;
       }
 
       .card-back img {
@@ -671,40 +678,77 @@
 
     @media (max-width: 520px) {
       .page {
+        padding: 8px;
+      }
+    
+      .hero {
         padding: 10px;
       }
-
-      .hero, .board-shell, .panel, .side-panel, .overlay-card, .modal-card {
-        padding: 14px;
+    
+      .subtitle,
+      .rules,
+      .footer,
+      .side-panel {
+        display: none;
       }
-
-      h1 {
-        font-size: 1.8rem;
-      }
-
-      .board {
-        grid-template-columns: repeat(2, minmax(120px, 1fr));
-      }
-
-      .card {
-        height: 150px;
-      }
-
-      .card-back img {
-        height: 106px;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr;
-      }
-
+    
       .stats {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin-top: 10px;
       }
-
+    
+      .stat-card {
+        min-height: 58px;
+        padding: 8px 6px;
+        border-radius: 12px;
+      }
+    
+      .stat-label {
+        font-size: 0.58rem;
+        margin-bottom: 4px;
+      }
+    
       .stat-value {
-        font-size: 1.02rem;
+        font-size: 0.9rem;
+      }
+    
+      .toolbar {
+        gap: 6px;
+        margin-top: 8px;
+      }
+    
+      .btn {
+        min-height: 38px;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+      }
+    
+      .board-shell {
+        margin-top: 10px;
+        padding: 8px;
+      }
+    
+      .board {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+    
+      .card {
+        height: calc((100vh - 260px) / 3);
+        min-height: 82px;
+        max-height: 120px;
+      }
+    
+      .card-back img {
+        height: calc(100% - 28px);
+        padding: 4px;
+      }
+    
+      .card-name {
+        min-height: 28px;
+        font-size: 9px;
+        padding: 2px 4px;
       }
     }
   </style>
@@ -1031,6 +1075,10 @@
       return cloned;
     }
 
+    function isMobile() {
+  return window.innerWidth <= 520;
+    }
+
     function formatTime(totalSeconds) {
       const min = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
       const sec = String(totalSeconds % 60).padStart(2, "0");
@@ -1038,7 +1086,16 @@
     }
 
     function getTotalPairs() {
-      return difficultyConfig[currentDifficulty].pairs;
+        if (isMobile()) {
+    const mobilePairs = {
+      easy: 6,
+      medium: 8,
+      hard: 10
+    };
+    return mobilePairs[currentDifficulty];
+  }
+
+  return difficultyConfig[currentDifficulty].pairs;
     }
 
     function getSelectedCharacters() {
@@ -1052,17 +1109,20 @@
 
     function updateBoardColumns() {
       if (window.innerWidth <= 520) {
-        board.style.gridTemplateColumns = "repeat(2, minmax(120px, 1fr))";
+        board.style.gridTemplateColumns = "repeat(4, 1fr)";
         return;
       }
+    
       if (window.innerWidth <= 768) {
-        board.style.gridTemplateColumns = "repeat(3, minmax(92px, 1fr))";
+        board.style.gridTemplateColumns = "repeat(4, 1fr)";
         return;
       }
+    
       if (window.innerWidth <= 900) {
-        board.style.gridTemplateColumns = "repeat(4, minmax(110px, 1fr))";
+        board.style.gridTemplateColumns = "repeat(4, 1fr)";
         return;
       }
+    
       board.style.gridTemplateColumns = "repeat(5, minmax(120px, 1fr))";
     }
 
