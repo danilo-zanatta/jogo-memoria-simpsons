@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brain Match Game</title>
+  <title>Brain Match Game 🐾</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -345,19 +345,46 @@
       background: radial-gradient(circle at top, #38bdf8, #0f172a);
     }
 
-    .card-back img { width: 100%; height: 134px; object-fit: contain; }
+    /* Layout específico para cartas de animal com emoji */
+    .card-back-animal {
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 8px;
+    }
+
+    .animal-emoji {
+      font-size: 4rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.30));
+      transition: transform 0.2s ease;
+    }
+
+    .card.matched .animal-emoji {
+      animation: animalBounce 0.5s ease;
+    }
+
+    @keyframes animalBounce {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.18) rotate(-6deg); }
+      70%  { transform: scale(1.10) rotate(4deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
 
     .card-name {
-      min-height: 40px;
+      min-height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 6px 8px;
-      font-size: 11px;
-      font-weight: 800;
-      line-height: 1.15;
-      background: #fff;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+      background: rgba(255,255,255,0.92);
+      border-radius: 10px;
+      color: #1f2937;
+      width: calc(100% - 16px);
     }
 
     .card.matched { animation: matchPulse 0.38s ease; }
@@ -504,7 +531,7 @@
       .hero, .board-shell, .panel, .side-panel { padding: 16px; }
       .board { grid-template-columns: repeat(4, minmax(110px, 1fr)); gap: 12px; }
       .card { height: 164px; }
-      .card-back img { height: 118px; }
+      .animal-emoji { font-size: 3.2rem; }
       .summary-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
@@ -513,7 +540,7 @@
       .stats { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
       .board { grid-template-columns: repeat(3, minmax(92px, 1fr)); }
       .card { height: 182px; border: none; padding: 0; background: transparent; cursor: pointer; perspective: 1000px; position: relative; width: 100%; }
-      .card-back img { height: 108px; }
+      .animal-emoji { font-size: 3rem; }
       .toolbar { flex-direction: column; align-items: stretch; }
       .btn { width: 100%; }
       .brand { width: 100%; border-radius: 22px; }
@@ -532,8 +559,8 @@
       .board-shell { margin-top: 10px; padding: 8px; }
       .board { grid-template-columns: repeat(4, 1fr); gap: 6px; }
       .card { height: calc((100vh - 260px) / 3); min-height: 82px; max-height: 120px; }
-      .card-back img { height: calc(100% - 28px); padding: 4px; }
-      .card-name { min-height: 28px; font-size: 9px; padding: 2px 4px; }
+      .animal-emoji { font-size: 2.4rem; }
+      .card-name { min-height: 24px; font-size: 8px; padding: 2px 6px; }
     }
   </style>
 </head>
@@ -545,10 +572,10 @@
   <!-- Tela de início -->
   <div class="overlay" id="startScreen">
     <div class="overlay-card">
-      <h2>Brain Match Game Premium</h2>
+      <h2>Brain Match Game 🐾</h2>
       <p>
-        Versão premium com música ambiente, ranking local com nome do jogador,
-        combo, dificuldade, modo contra o tempo com tempo por dificuldade e interface adaptada para celular e tablet.
+        Encontre os pares de animais! Versão com música ambiente, ranking local,
+        combo, dificuldade e modo contra o tempo. Interface adaptada para celular e tablet.
       </p>
 
       <div class="start-grid">
@@ -643,10 +670,10 @@
     <div class="container">
       <div class="topbar">
         <div class="brand">
-          <div class="brand-icon">☁️</div>
+          <div class="brand-icon">🐾</div>
           <div>
             <div class="brand-title">Brain Match Game</div>
-            <div class="brand-subtitle">Dashboard premium</div>
+            <div class="brand-subtitle">Edição Animais 🐾</div>
           </div>
         </div>
       </div>
@@ -655,7 +682,7 @@
         <div class="hero-inner">
           <div class="hero-grid">
             <div>
-              <h1>Encontre os pares e maximize sua pontuação</h1>
+              <h1>Encontre os pares de animais! 🐾</h1>
               <p class="subtitle">
                 Cada acerto vale 5 pontos. Erros retiram 1 ponto (mínimo 0).
                 Sequências de acertos aumentam o combo e adicionam bônus acumulativo.
@@ -781,27 +808,33 @@
   </div>
 
   <script>
+    /*
+     * Personagens substituídos por animais com emoji nativo.
+     * Vantagens: sem dependência de API externa, compatível com todos os dispositivos,
+     * visual fofo e universalmente reconhecível para todas as idades.
+     * O campo "image" foi substituído por "emoji" — renderizado via CSS/HTML puro.
+     */
     const characters = [
-      { id: 1,  name: "Hero Fire",    image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Fire"    },
-      { id: 2,  name: "Hero Ice",     image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Ice"     },
-      { id: 3,  name: "Hero Thunder", image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Thunder" },
-      { id: 4,  name: "Hero Earth",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Earth"   },
-      { id: 5,  name: "Hero Wind",    image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Wind"    },
-      { id: 6,  name: "Hero Shadow",  image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Shadow"  },
-      { id: 7,  name: "Hero Light",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Light"   },
-      { id: 8,  name: "Hero Metal",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Metal"   },
-      { id: 9,  name: "Hero Poison",  image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Poison"  },
-      { id: 10, name: "Hero Psychic", image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Psychic" },
-      { id: 11, name: "Hero Dragon",  image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Dragon"  },
-      { id: 12, name: "Hero Beast",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Beast"   },
-      { id: 13, name: "Hero Ninja",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Ninja"   },
-      { id: 14, name: "Hero Robot",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Robot"   },
-      { id: 15, name: "Hero Alien",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Alien"   },
-      { id: 16, name: "Hero Knight",  image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Knight"  },
-      { id: 17, name: "Hero Wizard",  image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Wizard"  },
-      { id: 18, name: "Hero Pirate",  image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Pirate"  },
-      { id: 19, name: "Hero Zombie",  image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Zombie"  },
-      { id: 20, name: "Hero Ghost",   image: "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Ghost"   }
+      { id:  1, name: "Cachorro",    emoji: "🐶" },
+      { id:  2, name: "Gato",        emoji: "🐱" },
+      { id:  3, name: "Hamster",     emoji: "🐹" },
+      { id:  4, name: "Coelho",      emoji: "🐰" },
+      { id:  5, name: "Raposa",      emoji: "🦊" },
+      { id:  6, name: "Urso",        emoji: "🐻" },
+      { id:  7, name: "Panda",       emoji: "🐼" },
+      { id:  8, name: "Koala",       emoji: "🐨" },
+      { id:  9, name: "Tigre",       emoji: "🐯" },
+      { id: 10, name: "Leão",        emoji: "🦁" },
+      { id: 11, name: "Vaca",        emoji: "🐮" },
+      { id: 12, name: "Porco",       emoji: "🐷" },
+      { id: 13, name: "Sapo",        emoji: "🐸" },
+      { id: 14, name: "Macaco",      emoji: "🐵" },
+      { id: 15, name: "Pinguim",     emoji: "🐧" },
+      { id: 16, name: "Pato",        emoji: "🦆" },
+      { id: 17, name: "Coruja",      emoji: "🦉" },
+      { id: 18, name: "Unicórnio",   emoji: "🦄" },
+      { id: 19, name: "Dragão",      emoji: "🐲" },
+      { id: 20, name: "Borboleta",   emoji: "🦋" }
     ];
 
     /*
@@ -1070,8 +1103,8 @@
     function createDeck() {
       activeCharacters = getSelectedCharacters();
       return shuffle(activeCharacters.flatMap((character) => [
-        { uid: `${character.id}-a`, pairId: character.id, name: character.name, image: character.image },
-        { uid: `${character.id}-b`, pairId: character.id, name: character.name, image: character.image }
+        { uid: `${character.id}-a`, pairId: character.id, name: character.name, emoji: character.emoji },
+        { uid: `${character.id}-b`, pairId: character.id, name: character.name, emoji: character.emoji }
       ]));
     }
 
@@ -1276,14 +1309,17 @@
       const button = document.createElement("button");
       button.className = "card";
       button.type = "button";
-      button.setAttribute("aria-label", `Carta do personagem ${cardData.name.replace("Hero ", "")}`);
+      button.setAttribute("aria-label", `Carta do animal ${cardData.name}`);
+      /*
+       * Card back agora exibe emoji nativo em tamanho grande + nome do animal.
+       * Sem dependência de API de imagem externa — renderização 100% offline.
+       */
       button.innerHTML = `
         <div class="card-inner">
-          <div class="card-face card-front">☁️</div>
-          <div class="card-face card-back">
-            <img src="${cardData.image}" alt="${cardData.name.replace("Hero ", "")}"
-              onerror="this.src='https://placehold.co/400x400/fde68a/111827?text=${encodeURIComponent(cardData.name)}'">
-            <div class="card-name">${cardData.name.replace("Hero ", "")}</div>
+          <div class="card-face card-front">❓</div>
+          <div class="card-face card-back card-back-animal">
+            <div class="animal-emoji">${cardData.emoji}</div>
+            <div class="card-name">${cardData.name}</div>
           </div>
         </div>
       `;
